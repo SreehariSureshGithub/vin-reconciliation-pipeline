@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vinrecon"
+version = "1.0.0"
+description = "Reconcile a vehicle dealer's stock sheet against QuickBooks exports and bank statements, per VIN and deal cycle."
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Sreehari Suresh" }]
+requires-python = ">=3.10"
+dependencies = ["pandas>=2.1", "openpyxl>=3.1", "PyYAML>=6.0"]
+keywords = ["reconciliation", "quickbooks", "accounting", "vin", "automotive", "pandas"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Topic :: Office/Business :: Financial :: Accounting",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.5"]
+
+[project.scripts]
+vinrecon = "vinrecon.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 135
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["B905"]  # zip() is only used over columns of the same DataFrame

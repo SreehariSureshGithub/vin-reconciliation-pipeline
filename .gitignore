@@ -1,0 +1,26 @@
+# Real business data and reports never belong in the repository
+data/
+output/
+sample/
+*.xlsx
+*.xls
+*.csv
+config.yaml
+!config.example.yaml
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

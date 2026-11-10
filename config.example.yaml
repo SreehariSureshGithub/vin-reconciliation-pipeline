@@ -1,0 +1,51 @@
+# vinrecon configuration. Copy to config.yaml and adjust. Every key is optional;
+# missing keys use the defaults in src/vinrecon/config.py.
+# Paths are relative to this file. Absolute paths and lists of patterns also work.
+
+inputs:
+  stock: data/stock*.xlsx                                  # operational stock / deal sheet (required)
+  general_ledger: data/*General Ledger*.xlsx               # QuickBooks: Reports > General Ledger (one file per year is fine)
+  purchases_detail: data/*Purchases by Supplier Detail*.xlsx
+  sales_detail: data/*Sales by Customer Detail*.xlsx
+  supplier_balance:                                         # open-item snapshots; the latest "As of" date wins
+    - data/*Supplier Balance Detail*.xlsx
+    - data/*A_P Ageing Detail*.xlsx
+  customer_balance:
+    - data/*Customer Balance Detail*.xlsx
+    - data/*A_R Ageing Detail*.xlsx
+  bank: data/bank*.xlsx                                     # optional; used for consignment collections
+
+output: output/reconciliation.xlsx
+
+# Map your stock-sheet headers to the fields the pipeline needs.
+stock_sheet: 0                      # sheet index or name
+stock_columns:
+  vin: VIN
+  cycle: Deal Cycle #               # optional; derived from purchase-date order if absent
+  deal_type: Deal Type(s)
+  purchase_date: Date of Purchase
+  purchase_ref: Purchase Invoice No
+  supplier: Purchased From (Seller/Consignor)
+  purchase_value: Purchase Cost
+  sale_date: Sold Date
+  sale_ref: Sales Invoice No
+  buyer: Sold To (Customer)
+  sale_value: Sales Price
+  margin: Margin                    # dealer commission on consignment deals
+
+bank_sheet: 0
+bank_columns: {date: DATE, description: Description, narration: NARATION, income: INCOME, expense: EXPENSE}
+
+consignment_keywords: [CONSIGN]     # matched case-insensitively inside deal_type
+cancelled_keywords: [CANCEL]
+internal_transfer_keywords: [OWN ACCOUNT, INTERNAL TRANSFER]   # add your own account names
+
+purchase_types: [Bill]
+sale_types: [Invoice]
+ap_account: Accounts Payable        # GL control accounts holding document totals
+ar_account: Accounts Receivable
+
+amount_tolerance: 1.0
+consignment_vat_rate: 0.05          # consignment invoice = margin * (1 + rate)
+fallback_supplier: Cash Supplier
+fallback_buyer: Cash Customer
